@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.embed.swing.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="601.0" prefWidth="861.0" stylesheets="@Metro-UI.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.uaz.jmmc.gui.VentanaMainController">
+   <children>
+      <MenuBar>
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+                  <MenuItem mnemonicParsing="false" onAction="#handleNueva" text="Nueva Red" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleAbrir" text="Abrir Red" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleGuardar" text="Guardar Red" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+              <MenuItem mnemonicParsing="false" onAction="#handleSalir" text="Salir" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#handleLimpiar" text="Limpiar" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="View">
+               <items>
+                  <CheckMenuItem fx:id="cmiTrainImg" mnemonicParsing="false" onAction="#handleTabTrainImagen" text="Entrenamiento con Imagenes" />
+                  <CheckMenuItem fx:id="cmiTestImg" mnemonicParsing="false" onAction="#handleTabPruebaImagen" text="Pruebas con Imagnes" />
+                  <CheckMenuItem fx:id="cmiTestDibujo" mnemonicParsing="false" onAction="#handleTabDibujo" text="Probar con Dibujo" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <CheckMenuItem fx:id="cmiSegmentar" mnemonicParsing="false" onAction="#handleTabSegmentar" text="Segmentar Imagen" />
+                  <CheckMenuItem fx:id="cmiFiltro" mnemonicParsing="false" onAction="#handleTabFiltro" text="Filtros de Imagenes" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <CheckMenuItem fx:id="cmiTrainBinario" mnemonicParsing="false" onAction="#handleTabTrainBinario" text="Entrenamiento Binario" />
+                  <CheckMenuItem fx:id="cmiTestBinario" mnemonicParsing="false" onAction="#handleTabPruebaBinario" text="Pruebas Binario" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <CheckMenuItem fx:id="cmiGrafo" mnemonicParsing="false" onAction="#handleTabGrafo" text="Grafo de Entrenamiento" />
+                  <CheckMenuItem fx:id="cmiPesos" mnemonicParsing="false" onAction="#handleTabPesos" text="Reporte de Pesos" />
+               </items>
+            </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <ToolBar prefHeight="40.0" prefWidth="200.0">
+        <items>
+          <Button fx:id="btnNuevo" mnemonicParsing="false" onAction="#handleNueva">
+               <graphic>
+                  <ImageView fitHeight="41.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../imagenes/ic_create.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="btnAbrir" mnemonicParsing="false" onAction="#handleAbrir">
+               <graphic>
+                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../imagenes/ic_folder.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="btnGuardar" mnemonicParsing="false" onAction="#handleGuardar">
+               <graphic>
+                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../imagenes/ic_save.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="btnLimpiar" mnemonicParsing="false" onAction="#handleLimpiar">
+               <graphic>
+                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../imagenes/ic_clear.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+        </items>
+      </ToolBar>
+      <AnchorPane style="-fx-background-color: white;" VBox.vgrow="ALWAYS">
+         <children>
+            <TabPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-radius: 20; -fx-background-color: #dcedf5;" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
+              <tabs>
+                <Tab text="Propiedades de la Red">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <GridPane layoutX="14.0" layoutY="14.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label text="Nombre:" />
+                                    <Label text="Neuronas de Entrada:" GridPane.rowIndex="2" />
+                                    <Label text="Neuronas en Ocultas:" GridPane.rowIndex="4" />
+                                    <Label text="Neuronas de Salida:" GridPane.rowIndex="6" />
+                                    <TextField fx:id="tfNombre" disable="true" GridPane.rowIndex="1" />
+                                    <TextField fx:id="tfNEntrada" disable="true" GridPane.rowIndex="3" />
+                                    <TextField fx:id="tfNOcultas" disable="true" GridPane.rowIndex="5" />
+                                    <TextField fx:id="tfNSalida" disable="true" GridPane.rowIndex="7" />
+                                    <ToggleButton fx:id="tbEntranada" disable="true" mnemonicParsing="false" text="No Entrenada" GridPane.halignment="CENTER" GridPane.rowIndex="10" />
+                                    <Label text="Función de Activación:" GridPane.rowIndex="8" />
+                                    <TextField disable="true" text="Función Sigmodea" GridPane.rowIndex="9" />
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+              </tabs>
+            </TabPane>
+            <TabPane fx:id="tpMain" layoutX="200.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-radius: 20; -fx-background-color: #f7f7f7;" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0">
+              <tabs>
+                <Tab fx:id="tabRedNeuronal" text="Red Neuronal">
+                  <content>
+                    <AnchorPane fx:id="apRedNeuronal" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fx:id="ivRedNeuronal" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+                                 <image>
+                                    <Image url="@../imagenes/vacio.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+                  <Tab fx:id="tabEntrenamientoImagen" text="Entranamiento con Imagenes">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <SplitPane dividerPositions="0.7090620031796503" layoutX="192.0" layoutY="134.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <items>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                       <children>
+                                          <Label layoutX="14.0" layoutY="14.0" text="Entrenamiento con Imagenes" textFill="#5a6a6f">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font></Label>
+                                          <Button layoutX="273.0" layoutY="55.0" mnemonicParsing="false" onAction="#handleElegirDirEntrenamientoImg" styleClass="btn" text="Elegir Directorio" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="58.0" />
+                                          <Label layoutX="33.0" layoutY="62.0" text="Cargar las Imagenes .pbm del directorio:" AnchorPane.rightAnchor="160.0" />
+                                          <TextArea fx:id="taEntImgs" layoutX="14.0" layoutY="99.0" prefHeight="361.0" prefWidth="412.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="99.0" />
+                                          <Label layoutX="14.0" layoutY="446.0" text="Nota: El primer caracter del nombre del archivo representa el contenido" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
+                                       </children>
+                                    </AnchorPane>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                       <children>
+                                          <GridPane hgap="10.0" vgap="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Label text="Taza Aprendizaje:" />
+                                                <CheckBox fx:id="cbLimitIter" mnemonicParsing="false" onAction="#handleLimitarIteracionesImgs" text="Limitar Iteraciones:" GridPane.rowIndex="4" />
+                                                <Button mnemonicParsing="false" onAction="#handleEIDetener" styleClass="btn" text="Detener" GridPane.halignment="CENTER" GridPane.rowIndex="8" />
+                                                <TextField fx:id="tfEITaza" text="0.3" GridPane.rowIndex="1" />
+                                                <TextField fx:id="tfEIErrorMin" text="0.1" GridPane.rowIndex="3" />
+                                                <Button mnemonicParsing="false" onAction="#handleEntrenarImagenes" styleClass="btn" text="Entrenar" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+                                                <ProgressIndicator fx:id="piEI" progress="0.0" GridPane.rowIndex="7" />
+                                                <TextField fx:id="tfEIIteraciones" disable="true" text="10000" GridPane.rowIndex="5" />
+                                                <Label text="Error Minimo:" GridPane.rowIndex="2" />
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </padding>
+                                          </GridPane>
+                                       </children>
+                                    </AnchorPane>
+                                </items>
+                              </SplitPane>
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </Tab>
+                  <Tab fx:id="tabPruebasImagen" text="Descodificación de Imagenes">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Button layoutX="463.0" layoutY="53.0" mnemonicParsing="false" onAction="#handleElegirDirDescofificarImg" styleClass="btn" text="Elegir Directorio" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="58.0" />
+                              <Label layoutX="154.0" layoutY="62.0" text="Cargar imagenes .pbm de prueba del directorio:" AnchorPane.rightAnchor="160.0" />
+                              <Label layoutX="14.0" layoutY="14.0" text="Descodificación de Imagenes" textFill="#5a6a6f" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <TextArea fx:id="taDescodificacion" layoutX="14.0" layoutY="95.0" prefHeight="333.0" prefWidth="602.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="99.0">
+                                 <font>
+                                    <Font name="Menlo Regular" size="13.0" />
+                                 </font>
+                              </TextArea>
+                              <Button layoutX="442.0" layoutY="438.0" mnemonicParsing="false" onAction="#handleDescodificarImagenes" styleClass="btn" text="Descodificar" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+                              <Label layoutX="14.0" layoutY="444.0" text="Nota: El primer caracter del nombre del archivo representa el contenido" AnchorPane.bottomAnchor="18.0" AnchorPane.leftAnchor="14.0" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </Tab>
+                  <Tab fx:id="tabPruebaDibujo" text="Prueba con Dibujo">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Label layoutX="14.0" layoutY="29.0" text="Label" />
+                              <ImageView fitHeight="307.0" fitWidth="373.0" layoutX="14.0" layoutY="57.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../imagenes/vacio.png" />
+                                 </image>
+                              </ImageView>
+                              <Label layoutX="402.0" layoutY="69.0" text="Label" />
+                              <Button layoutX="316.0" layoutY="351.0" mnemonicParsing="false" text="Button" />
+                              <Button layoutX="222.0" layoutY="351.0" mnemonicParsing="false" text="Button" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </Tab>
+                  <Tab fx:id="tabSegmentar" text="Segmentar Imagen">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <SplitPane dividerPositions="0.712241653418124" layoutX="216.0" layoutY="134.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <items>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                       <children>
+                                          <Label layoutX="14.0" layoutY="14.0" text="Segmentador" textFill="#5a6a6f" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font></Label>
+                                          <Label layoutX="151.0" layoutY="62.0" text="Seleccione una Imagen" AnchorPane.rightAnchor="151.0" />
+                                          <Button layoutX="309.0" layoutY="58.0" mnemonicParsing="false" onAction="#handleElegirImagenSegmentador" styleClass="btn" text="Añadir Imagen" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="58.0" />
+                                          <Label layoutX="14.0" layoutY="446.0" text="Nota: Todas las imagenes deben ser del mismo tamaño" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
+                                          <TilePane fx:id="tpSegment" layoutX="14.0" layoutY="101.0" prefHeight="334.0" prefWidth="409.0" style="-fx-border-color: black;" styleClass="background" AnchorPane.bottomAnchor="42.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="100.0" />
+                                       </children>
+                                    </AnchorPane>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                       <children>
+                                          <GridPane hgap="10.0" layoutX="-11.0" layoutY="178.0" vgap="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <columnConstraints>
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                             <children>
+                                                <Label text="Numero Renglones:" />
+                                                <Label text="Numero de Columnas:" GridPane.rowIndex="2" />
+                                                <Label text="Characteres en Renglon:" GridPane.rowIndex="4" />
+                                                <Label text="Elegir Directorio y Trabajar" GridPane.rowIndex="6" />
+                                                <TextField fx:id="tfNumRenglones" GridPane.rowIndex="1" />
+                                                <TextField fx:id="tfNumColumnas" GridPane.rowIndex="3" />
+                                                <TextField fx:id="tfCharacteresRenglon" GridPane.rowIndex="5" />
+                                                <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleSegmentar" styleClass="btn" text="Segmentar" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </padding>
+                                          </GridPane>
+                                       </children>
+                                    </AnchorPane>
+                                </items>
+                              </SplitPane>
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </Tab>
+                  <Tab fx:id="tabFiltrar" text="Filtrar Imagenes">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Label layoutX="14.0" layoutY="14.0" text="Filtrar Imagenes" textFill="#5a6a6f" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font></Label>
+                              <GridPane alignment="CENTER_RIGHT" layoutX="180.0" layoutY="402.0" prefHeight="64.0" prefWidth="606.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <Button mnemonicParsing="false" onAction="#handleProcesarImagenes" prefWidth="155.0" styleClass="btn" text="Procesar Imagenes" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                                    <Label fx:id="lbDirDestino" text="Seleccione el Directorio Destino y Empezar a Procesar" GridPane.halignment="RIGHT" />
+                                    <Label text="Las imagenes resultanes serán guardadas con formato .pbm 5x7" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                                 </children>
+                              </GridPane>
+                              <Label fx:id="lbDirFuente" layoutX="106.0" layoutY="54.0" text="Seleccione un Directorio con las Imagenes a Filtrar" AnchorPane.rightAnchor="214.0" AnchorPane.topAnchor="54.0" />
+                              <Label layoutX="177.0" layoutY="17.0" text="--&gt; Auto-Cropping  --&gt; Normalización  --&gt; Binarización --&gt;" AnchorPane.leftAnchor="177.0" AnchorPane.topAnchor="17.0" />
+                              <Button layoutX="441.0" layoutY="50.0" mnemonicParsing="false" onAction="#handleSelectDirFuente" prefWidth="155.0" styleClass="btn" text="Directorio Fuente" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="50.0" />
+                              <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutX="14.0" layoutY="89.0" prefViewportHeight="301.0" prefViewportWidth="603.0" AnchorPane.bottomAnchor="89.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="89.0">
+                                 <content>
+                                    <TilePane fx:id="tpFiltrar" layoutX="14.0" layoutY="89.0" prefHeight="304.0" prefWidth="601.0" style="-fx-border-color: black;" styleClass="background" AnchorPane.bottomAnchor="89.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="89.0" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </Tab>
+                <Tab fx:id="tabEntrenamientoBinario" closable="false" text="Entrenamiento Binario">
+                     <content>
+                        <SplitPane dividerPositions="0.6965">
+                          <items>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                 <children>
+                                    <HBox layoutX="14.0" layoutY="438.0" spacing="10.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0">
+                                       <children>
+                                          <Button fx:id="btnDGuardar" layoutX="14.0" layoutY="438.0" mnemonicParsing="false" onAction="#handleGuardarDatos" styleClass="btn" text="Guardar" />
+                                          <Button fx:id="btnDCargar" layoutX="93.0" layoutY="438.0" mnemonicParsing="false" onAction="#handleCargarDatos" styleClass="btn" text="Cargar" />
+                                          <Button fx:id="btnDQuitar" layoutX="173.0" layoutY="438.0" mnemonicParsing="false" onAction="#handleQuitarRenglon" styleClass="btn" text="- Renglon" />
+                                          <Button fx:id="btnAnadirRenglon" layoutX="397.0" layoutY="439.0" mnemonicParsing="false" onAction="#hangleAnadirRenglon" styleClass="btn" text="+ Renglon" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+                                       </children>
+                                    </HBox>
+                                    <Label text="Datos de Entrenamiento" textFill="#369ab7" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
+                                       <font>
+                                          <Font name="System Bold" size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <SwingNode fx:id="snEntrenamiento" layoutX="28.0" layoutY="66.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="40.0" />
+                                 </children>
+                              </AnchorPane>
+                              <GridPane>
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <Label layoutY="30.0" text="Error Maximo:" GridPane.rowIndex="2" />
+                                    <Label layoutY="5.0" text="Taza Aprendizaje:" />
+                                    <TextField fx:id="tfErrorMaximo" layoutX="109.0" text="0.01" GridPane.rowIndex="3" />
+                                    <TextField fx:id="tfTazaAprendizaje" layoutX="109.0" layoutY="25.0" text="0.3" GridPane.rowIndex="1" />
+                                    <Button fx:id="btnEntrenar" mnemonicParsing="false" onAction="#handleEntrenar" styleClass="btn" text="Entrenar Red" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+                                    <CheckBox fx:id="cbLimitarIteraciones" mnemonicParsing="false" onAction="#handleLimitarIteraciones" text="Limitar Iteraciones" GridPane.rowIndex="4" />
+                                    <TextField fx:id="tfIteraciones" disable="true" text="10000" GridPane.rowIndex="5" />
+                                    <ProgressIndicator fx:id="piProgreso" progress="0.0" GridPane.rowIndex="7" />
+                                    <Button fx:id="btnDetener" mnemonicParsing="false" onAction="#handleDetener" styleClass="btn" text="Detener" GridPane.halignment="CENTER" GridPane.rowIndex="8" />
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </GridPane>
+                          </items>
+                        </SplitPane>
+                     </content>
+                </Tab>
+                  <Tab fx:id="tabPruebasBinario" text="Pruebas Binario">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Label layoutX="14.0" layoutY="14.0" text="Datos de Prueba" textFill="#369ab7">
+                                 <font>
+                                    <Font name="System Bold" size="18.0" />
+                                 </font>
+                              </Label>
+                              <HBox layoutX="194.0" layoutY="437.0" spacing="10.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0">
+                                 <children>
+                                    <Button fx:id="btnCopiarDatos" layoutX="194.0" layoutY="437.0" mnemonicParsing="false" onAction="#handleCopiarDatos" styleClass="btn" text="Copiar Datos de Entrenamiento" />
+                                    <Button fx:id="btnProbar" layoutX="427.0" layoutY="437.0" mnemonicParsing="false" onAction="#handleProbarDatos" styleClass="btn" text="Probar con Datos" />
+                                 </children>
+                              </HBox>
+                              <SwingNode fx:id="snPruebas" layoutX="36.0" layoutY="77.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="40.0" />
+                           </children></AnchorPane>
+                    </content>
+                  </Tab>
+                  <Tab fx:id="tabPesos" closable="false" text="Reporte de Pesos">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TextArea fx:id="taReportePesos" layoutX="14.0" layoutY="14.0" prefHeight="417.0" prefWidth="544.0" AnchorPane.bottomAnchor="47.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
+                              <Button fx:id="btnActualizarPesos" layoutX="488.0" layoutY="437.0" mnemonicParsing="false" onAction="#handleActualizarPesos" styleClass="btn" text="Actualizar" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </Tab>
+                  <Tab fx:id="tabResultados" text="Grafo de Entrenamiento">
+                     <content>
+                        <BorderPane fx:id="paneResultados" prefHeight="200.0" prefWidth="200.0" />
+                     </content>
+                  </Tab>
+              </tabs>
+            </TabPane>
+         </children>
+      </AnchorPane>
+   </children>
+</VBox>
