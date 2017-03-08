@@ -13,6 +13,7 @@ import java.io.Serializable;
  */
 public class Sinapsis implements Serializable{
     
+    private static final long serialVersionUID = 1L;
     private Neurona emisor;
     private Neurona receptor;
     private double peso;

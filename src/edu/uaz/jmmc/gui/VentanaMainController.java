@@ -16,24 +16,15 @@
  */
 package edu.uaz.jmmc.gui;
 
-import edu.uaz.jmmc.filtros_imagen.DownSampler;
-import edu.uaz.jmmc.filtros_imagen.PbmManager;
-import edu.uaz.jmmc.filtros_imagen.Muestra;
-import edu.uaz.jmmc.filtros_imagen.Segmentador;
-import edu.uaz.jmmc.mlp.Capa;
-import edu.uaz.jmmc.mlp.FuncionSigmoidea;
-import edu.uaz.jmmc.mlp.RedNeuronal;
-import edu.uaz.jmmc.util.RNPainter;
-import edu.uaz.jmmc.util.RNSerializer;
 import java.awt.FileDialog;
 import java.awt.Frame;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +34,30 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
+import edu.uaz.jmmc.filtros_imagen.DownSampler;
+import edu.uaz.jmmc.filtros_imagen.Muestra;
+import edu.uaz.jmmc.filtros_imagen.PbmManager;
+import edu.uaz.jmmc.filtros_imagen.Segmentador;
+import edu.uaz.jmmc.filtros_imagen.ZhangThinning;
+import edu.uaz.jmmc.gui.servicios.DescodificarImagenesService;
+import edu.uaz.jmmc.gui.servicios.EntrenarImagenesService;
+import edu.uaz.jmmc.gui.servicios.EntrenarService;
+import edu.uaz.jmmc.mlp.Capa;
+import edu.uaz.jmmc.mlp.FuncionSigmoidea;
+import edu.uaz.jmmc.mlp.MLP;
+import edu.uaz.jmmc.mlp.RedNeuronal;
+import edu.uaz.jmmc.util.DrawMuestra;
+import edu.uaz.jmmc.util.DrawingCanvas;
+import edu.uaz.jmmc.util.RNPainter;
+import edu.uaz.jmmc.util.RNSerializer;
 import javafx.application.Platform;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.embed.swing.SwingNode;
@@ -76,20 +88,13 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javax.imageio.ImageIO;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.vecmath.Point2d;
 
 /**
  * FXML Controller class
@@ -225,9 +230,14 @@ public class VentanaMainController implements Initializable {
     @FXML
     private TextArea taDescodificacion;
 
-    private RedNeuronal red;
+    @FXML
+    private TextField tfReconocido;
+
+    @FXML
+    private HBox boxDibujar;
+
+    private MLP red;
     private int entradas;
-    private int ocultas;
     private int salidas;
     private javafx.scene.image.Image img;
     private EntrenarService service;
@@ -241,12 +251,18 @@ public class VentanaMainController implements Initializable {
     private ArrayList<File> list_files_des;
     private Stage stage;
 
+    private DrawingCanvas canvas;
+    private ImageView smallImage;
+
     /**
      * Initializes the controller class.
+     *
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+
         img = new javafx.scene.image.Image("/edu/uaz/jmmc/imagenes/vacio.png");
 
         handleLimpiar(null);
@@ -263,10 +279,6 @@ public class VentanaMainController implements Initializable {
         tpMain.getTabs().remove(tabPesos);
         tpMain.getTabs().remove(tabPruebaDibujo);
 
-//        cmiTestBinario.setSelected(true);
-//        cmiTrainBinario.setSelected(true);
-//        cmiPesos.setSelected(true);
-//        cmiTestDibujo.setSelected(true);
         cmiTrainImg.setSelected(true);
         cmiTestImg.setSelected(true);
         cmiSegmentar.setSelected(true);
@@ -275,9 +287,6 @@ public class VentanaMainController implements Initializable {
 
         tpSegment.setPadding(new Insets(15, 15, 15, 15));
         tpSegment.setHgap(15);
-        /**
-         * @todo
-         */
         tpSegment.getChildren().clear();
 
         tpFiltrar.setPadding(new Insets(15, 15, 15, 15));
@@ -286,6 +295,11 @@ public class VentanaMainController implements Initializable {
         img_to_segment = new ArrayList<>();
         imgs_to_filter = new TreeMap<>();
         list_files = new ArrayList<>();
+
+        //crear el canvas y añadirlo al HBox
+        canvas = new DrawingCanvas(300, 300);
+        smallImage = new ImageView();
+        boxDibujar.getChildren().addAll(canvas, smallImage);
     }
 
     public void initData(Stage stage) {
@@ -317,7 +331,7 @@ public class VentanaMainController implements Initializable {
         fileChooser.setTitle("Open File");
 
         // Set extension filter
-        List<String> l = new ArrayList();
+        List<String> l = new ArrayList<>();
         l.add("*.ser");
         FileChooser.ExtensionFilter extFilter
                 = new FileChooser.ExtensionFilter("Java Object files", l);
@@ -364,7 +378,7 @@ public class VentanaMainController implements Initializable {
         if (file != null) {
             try {
                 RNSerializer ser = new RNSerializer();
-                ser.serializeRed(red, file.toString());
+                ser.serializeObject(red, file.toString());
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
             }
@@ -492,10 +506,10 @@ public class VentanaMainController implements Initializable {
 //            btnDetener.setVisible(false);
             //IMPRIMIR LOS ERRORES A LA CONSOLA
             System.out.println("");
-            ArrayList<Point2d> errores = red.getErrores();
+            ArrayList<Point.Double> errores = red.getErrores();
             for (int i = 0; i < errores.size(); i++) {
-                Point2d p = errores.get(i);
-                System.out.println(p.x+"\t"+p.y);
+                Point.Double p = errores.get(i);
+                System.out.println(p.x + "\t" + p.y);
             }
             System.out.println("");
         });
@@ -512,7 +526,7 @@ public class VentanaMainController implements Initializable {
         fileChooser.setTitle("Open File");
 
         // Set extension filter
-        List<String> l = new ArrayList();
+        List<String> l = new ArrayList<>();
         l.add("*.png");
         l.add("*.jpg");
         l.add("*.gif");
@@ -620,11 +634,15 @@ public class VentanaMainController implements Initializable {
 
         PbmManager p = new PbmManager();
         DownSampler ds = new DownSampler();
+        ZhangThinning thin = new ZhangThinning();
 
         Set<String> keySet = imgs_to_filter.keySet();
         Muestra muestra;
         for (String key : keySet) {
+        	//TODO do zhang thining first
+//            muestra = imgs_to_filter.get(key);
             muestra = ds.downSample(imgs_to_filter.get(key));
+            thin.doZhangSuenThinning(muestra.getGrid(), true);
 //            System.out.println(key);
             String name = removeFileSuffix(key);
             p.guardarArregloEnImagen(directorio + "/" + name + ".pbm", muestra.getGrid());
@@ -671,7 +689,7 @@ public class VentanaMainController implements Initializable {
         fileChooser.setTitle("Open File");
 
         // Set extension filter
-        List<String> l = new ArrayList();
+        List<String> l = new ArrayList<>();
         l.add("*.ser");
         FileChooser.ExtensionFilter extFilter
                 = new FileChooser.ExtensionFilter("Java Object files", l);
@@ -952,11 +970,52 @@ public class VentanaMainController implements Initializable {
         tfEIIteraciones.setDisable(!disabled);
     }
 
+    @FXML
+    private void handleFiltrar(ActionEvent event) {
+
+    }
+
+    //handleLimpiarDibujo
+    @FXML
+    private void handleLimpiarDibujo(ActionEvent event) {
+        canvas.reset(Color.WHITE);
+        tfReconocido.setText("");
+    }
+
+    @FXML
+    private void handleReconocer(ActionEvent event) {
+        if (red != null) {
+            Image image = canvas.getImage();
+            DownSampler ds = new DownSampler();
+            Muestra sample = ds.downSample(image);
+            PbmManager pbmm = new PbmManager();
+            byte[] flattenedArray = pbmm.flattenArray(sample.getGrid());
+
+            double[] resultado = red.clasificar(flattenedArray);
+            byte[] binarizedArray = binarizeArray(resultado);
+
+            char check = check(binarizedArray);
+
+            tfReconocido.setText(check + "");
+
+            Image dibujarMuestra = DrawMuestra.dibujarMuestra(sample.getGrid());
+            smallImage.setImage(SwingFXUtils.toFXImage((BufferedImage) dibujarMuestra, null));
+
+        }
+    }
+
     protected void inicializarRed(String nombre, int entradas, int[] ocultas, int salida) {
         //limpiar todo
         handleLimpiar(null);
 
+        /**
+         * @TODO
+         */
+        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         red = new RedNeuronal(nombre);
+//        red = new NeuralNet(nombre);
+        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
         this.entradas = entradas;
 //        this.ocultas = ocultas;
         this.salidas = salida;
@@ -1002,7 +1061,7 @@ public class VentanaMainController implements Initializable {
 
     }
 
-    protected LineChart<Number, Number> lineChartError(ArrayList<Point2d> ps) {
+    protected LineChart<Number, Number> lineChartError(ArrayList<Point.Double> ps) {
         final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();
         xAxis.setLabel("Epoca");
@@ -1013,10 +1072,10 @@ public class VentanaMainController implements Initializable {
         lineChart.setCreateSymbols(false);
         lineChart.setAlternativeRowFillVisible(false);
 
-        XYChart.Series series = new XYChart.Series();
+        XYChart.Series<Number, Number> series = new XYChart.Series<>();
         series.setName("Resultados de Red " + red.getNombre());
-        for (Point2d p : ps) {
-            series.getData().add(new XYChart.Data(p.x, p.y));
+        for (Point.Double p : ps) {
+            series.getData().add(new XYChart.Data<Number, Number>(p.x, p.y));
         }
         lineChart.getData().add(series);
 
@@ -1145,256 +1204,7 @@ public class VentanaMainController implements Initializable {
         }
         return s.substring(0, i2);
     }
-}
 
-class EntrenarService extends Service<Void> {
-
-    private double ta;
-    private double et;
-    private double[][] salida;
-    private byte[][] entrada;
-    private RedNeuronal red;
-    private boolean iterar;
-    private int iteraciones;
-
-    public void init(double ta,
-            double et,
-            double[][] salida,
-            byte[][] entrada,
-            RedNeuronal red,
-            boolean iterar,
-            int iteraciones) {
-        this.ta = ta;
-        this.et = et;
-        this.salida = salida;
-        this.entrada = entrada;
-        this.red = red;
-        this.iterar = iterar;
-        this.iteraciones = iteraciones;
-    }
-
-    @Override
-    protected Task<Void> createTask() {
-        return new Task<Void>() {
-
-            @Override
-            protected Void call() throws IOException, MalformedURLException {
-                if (iterar) {
-                    red.entrenarRed(entrada, salida, ta, iteraciones);
-                } else {
-                    red.entrenarRed(entrada, salida, ta, et);
-                }
-                updateProgress(5, 5);
-                return null;
-            }
-
-        };
-    }
-}
-
-class SwingTable extends JPanel {
-
-    public JTable tabla;
-
-    public SwingTable(String[][] datos, String[] cloumnas) {
-        DefaultTableModel dtm = new DefaultTableModel(datos, cloumnas);
-        tabla = new JTable(dtm);
-        JScrollPane scrollPane = new JScrollPane(tabla);
-
-        this.add(scrollPane);
-    }
-
-    public JTable getTabla() {
-        return tabla;
-    }
-
-    public void setTabla(JTable tabla) {
-        this.tabla = tabla;
-    }
-
-}
-
-class EntrenarImagenesService extends Service<Void> {
-
-    private double ta;
-    private double et;
-    private double[][] salida;
-    private byte[][] entrada;
-    private RedNeuronal red;
-    private boolean iterar;
-    private int iteraciones;
-    private ArrayList<File> pbm_files;
-
-    private final double[][] patrones_salidas;
-
-    public EntrenarImagenesService() {
-        this.patrones_salidas = new double[][]{
-            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
-            {0, 0, 0, 0, 0, 0, 0, 0, 0, 1}
-        };
-    }
-
-    public void init(double ta,
-            double et,
-            //            double[][] salida,
-            //            byte[][] entrada,
-            ArrayList<File> pbm_files,
-            RedNeuronal red,
-            boolean iterar,
-            int iteraciones) {
-        this.ta = ta;
-        this.et = et;
-
-        this.red = red;
-        this.iterar = iterar;
-        this.iteraciones = iteraciones;
-
-        this.pbm_files = pbm_files;
-    }
-
-    @Override
-    protected Task<Void> createTask() {
-        return new Task<Void>() {
-
-            @Override
-            protected Void call() throws IOException, MalformedURLException {
-                //primero preparar los datos de entrad y de salidas esperadas
-
-                //inizializar los arreglos de datos de entrada y salida
-                entrada = new byte[pbm_files.size()][];
-                salida = new double[pbm_files.size()][];
-
-                PbmManager pm = new PbmManager();
-                try {
-                    for (int i = 0; i < pbm_files.size(); i++) {
-                        File file = pbm_files.get(i);
-
-                        System.out.println("\tFile:" + file);
-
-                        byte[][] arreglo = pm.cargarArregloDeImagen(file.toURI());
-                        entrada[i] = pm.flattenArray(arreglo);
-
-                        System.out.println("\tArreglo Tamaño:" + entrada[i].length);
-
-                        char digito = file.getName().charAt(0);
-
-                        System.out.println("\nDigito=" + digito);
-
-                        int parseInt = Integer.parseInt(digito + "");
-                        salida[i] = patrones_salidas[parseInt];
-
-                        System.out.println("");
-                    }
-                } catch (Exception e) {
-                    System.out.println("Error en Task=" + e);
-                    return null;
-                }
-                /**
-                 * @todo
-                 */
-
-                if (iterar) {
-                    red.entrenarRed(entrada, salida, ta, iteraciones);
-                } else {
-                    red.entrenarRed(entrada, salida, ta, et);
-                }
-                updateProgress(5, 5);
-                return null;
-            }
-
-        };
-    }
-}
-
-/*
-switch (digito) {
-                            case '0':
-                                break;
-                            case '1':
-                                break;
-                            case '2':
-                                break;
-                            case '3':
-                                break;
-                            case '4':
-                                break;
-                            case '5':
-                                break;
-                            case '6':
-                                break;
-                            case '7':
-                                break;
-                            case '8':
-                                break;
-                            case '9':
-                                break;
-                        }
- */
-class DescodificarImagenesService extends Service<String> {
-
-    private ArrayList<File> files;
-    private RedNeuronal red;
-
-    public void init(ArrayList<File> pbm_files, RedNeuronal red) {
-        this.red = red;
-        this.files = pbm_files;
-    }
-
-    @Override
-    protected Task<String> createTask() {
-        return new Task<String>() {
-
-            @Override
-            protected String call() throws IOException, MalformedURLException {
-                PbmManager pbm = new PbmManager();
-                StringBuilder sb = new StringBuilder();
-                int num_correct = 0;
-                for (int i = 0; i < files.size(); i++) {
-                    File f = files.get(i);
-                    byte[][] cargarImagenEnArreglo = pbm.cargarArregloDeImagen(f.toURI());
-                    byte[] flat = pbm.flattenArray(cargarImagenEnArreglo);
-                    char expected = f.getName().charAt(0);
-
-                    double[] resultado = red.clasificar(flat);
-                    byte[] binarizedArray = binarizeArray(resultado);
-
-                    char check = check(binarizedArray);
-
-                    boolean same = false;
-                    if (expected == check) {
-                        same = true;
-                        num_correct++;
-                    }
-
-                    sb.append(f.getName())
-                            .append("  \t")
-                            .append(arrayToString(binarizedArray))
-                            .append("\t")
-                            .append(expected)
-                            .append(" clasificado como ")
-                            .append(check)
-                            .append(" ")
-                            .append(same);
-                    sb.append("\n");
-                }
-                double precision = (double) num_correct / (double) files.size();
-                precision = precision * 100;
-                sb.append("Porcentaje de Presición ").append(precision);
-
-                return sb.toString();
-            }
-
-        };
-
-    }
     byte[][] patrones_salidas = new byte[][]{
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -1413,15 +1223,9 @@ class DescodificarImagenesService extends Service<String> {
         for (int i = 0; i < patrones_salidas.length; i++) {
             boolean es = true;
             for (int j = 0; j < patrones_salidas[i].length; j++) {
-//                if (ch[j] == patrones_salidas[i][j]) {
-//                    break;
-//                }
                 es = es && (ch[j] == patrones_salidas[i][j]);
-
             }
             if (es) {
-//                String s= i+"";
-//                is = s.charAt(0);
                 is = (char) (i + 48);
                 break;
             }
@@ -1434,7 +1238,6 @@ class DescodificarImagenesService extends Service<String> {
         for (int i = 0; i < d.length; i++) {
             sb.append(d[i]).append(" ");
         }
-//        sb.append("")
         return sb.toString();
     }
 

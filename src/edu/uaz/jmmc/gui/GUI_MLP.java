@@ -10,7 +10,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 /**
  *
@@ -23,13 +22,15 @@ public class GUI_MLP extends Application {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/edu/uaz/jmmc/gui/VentanaMain.fxml"));
 
-        stage.setTitle("Sistema de Redes Neuronales");
+        stage.setTitle("Sistema de OCR con Red Neuronal");
         stage.setScene(new Scene((Parent) loader.load()));
 
         VentanaMainController controller = loader.<VentanaMainController>getController();
         controller.initData(stage);
 
         stage.setMaximized(true);
+//        stage.setMinWidth(800);
+//        stage.setMaxHeight(600);
         stage.show();
         
     }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.9" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <package id="1" language="java" name="edu.uaz.jmmc.mlp" project="Tesis_JMMC" file="/Tesis_JMMC/src/edu/uaz/jmmc/mlp" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="301" y="64"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="2" language="java" name="edu.uaz.jmmc.imagenes" project="Tesis_JMMC" 
+    file="/Tesis_JMMC/src/edu/uaz/jmmc/imagenes" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="520" y="66"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="3" language="java" name="edu.uaz.jmmc.filtros_imagen" project="Tesis_JMMC" 
+    file="/Tesis_JMMC/src/edu/uaz/jmmc/filtros_imagen" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="80" y="62"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="4" language="java" name="edu.uaz.jmmc.gui" project="Tesis_JMMC" file="/Tesis_JMMC/src/edu/uaz/jmmc/gui" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="306" y="203"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="5" language="java" name="edu.uaz.jmmc.util" project="Tesis_JMMC" file="/Tesis_JMMC/src/edu/uaz/jmmc/util" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="511" y="204"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

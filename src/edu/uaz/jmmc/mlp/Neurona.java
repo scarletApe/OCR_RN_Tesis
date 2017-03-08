@@ -14,6 +14,7 @@ import java.io.Serializable;
  */
 public class Neurona implements Serializable{
 
+    private static final long serialVersionUID = 1L;
     private Sinapsis[] sinapsisEntrada;
     private Sinapsis[] sinapsisSalida;
     private double bias;

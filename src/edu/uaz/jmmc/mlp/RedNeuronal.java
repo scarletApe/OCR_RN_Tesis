@@ -5,9 +5,9 @@
  */
 package edu.uaz.jmmc.mlp;
 
+import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
-import javax.vecmath.Point2d;
 
 /**
  * Esta red es un Multi-Layered Perceptron (MLP), un Perceptron Multi-Capa. Este
@@ -17,13 +17,14 @@ import javax.vecmath.Point2d;
  *
  * @author juanmartinez
  */
-public class RedNeuronal implements Serializable {
+public class RedNeuronal implements Serializable, MLP {
 
+    private static final long serialVersionUID = 1L;
     private Capa capaEntrada;
     private Capa capasOcultas[];
     private Capa capaSalida;
     private String nombre;
-    private ArrayList<Point2d> errores;
+    private ArrayList<Point.Double> errores;
 
     public RedNeuronal() {
     }
@@ -32,10 +33,12 @@ public class RedNeuronal implements Serializable {
         this.nombre = nombre;
     }
 
+    @Override
     public String getNombre() {
         return nombre;
     }
 
+    @Override
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
@@ -64,11 +67,13 @@ public class RedNeuronal implements Serializable {
         this.capaSalida = capaSalida;
     }
 
-    public ArrayList<Point2d> getErrores() {
+    @Override
+    public ArrayList<Point.Double> getErrores() {
         return errores;
     }
 
-    public void setErrores(ArrayList<Point2d> errores) {
+    @Override
+    public void setErrores(ArrayList<Point.Double> errores) {
         this.errores = errores;
     }
 
@@ -83,6 +88,7 @@ public class RedNeuronal implements Serializable {
      * @param funcion Que funcion de activacion, pero la unica que funcionará es
      * la de sigmoide.
      */
+    @Override
     public void crearRed(int num_entrada, int[] num_ocultas, int num_salida, FuncionActivacion funcion) {
 
         //crear las capas
@@ -152,6 +158,7 @@ public class RedNeuronal implements Serializable {
      * @param learningRate Taza de aprendizaje
      * @param numero_epocas Por cuantas epocas se correrá el entrenamiento.
      */
+    @Override
     public void entrenarRed(byte[][] entradas, double[][] salidas, double learningRate, int numero_epocas) {
 
         //paso 1: proveer los datos de entrada a las neuronas de entrada
@@ -161,7 +168,7 @@ public class RedNeuronal implements Serializable {
         errores = new ArrayList<>(200);
         int epoca = 0;
         double error_total;
-        double error_promedio=0;
+        double error_promedio;
         
         while (true) {
             error_total = 0.0;
@@ -196,7 +203,7 @@ public class RedNeuronal implements Serializable {
             }
             error_promedio = error_total / salidas.length; //entre el numero de muestras
             if (epoca % 5 == 0) {
-                errores.add(new Point2d(epoca, error_promedio));
+                errores.add(new Point.Double(epoca, error_promedio));
             }
             
             System.out.println("\tError Promedio=" + error_promedio +" error total="+error_total+" numero muestras="+salidas.length);
@@ -215,6 +222,7 @@ public class RedNeuronal implements Serializable {
      * @return Los datos de salida (puede que la red tenga más de una neurona de
      * salida)
      */
+    @Override
     public double[] clasificar(byte[] entrada) {
         //a las neuronas de entrada, ponerle el valor de entrada como su salida
         Neurona[] neuronas = capaEntrada.getNeuronas();
@@ -234,9 +242,7 @@ public class RedNeuronal implements Serializable {
         for (int i = 0; i < salidas.length; i++) {
             salidas[i] = ns[i].getSalida();
         }
-        //TODO
-        //the salidas is a double but should be a byte have to change this.
-
+        
         return salidas;
     }
 
@@ -249,6 +255,7 @@ public class RedNeuronal implements Serializable {
      * @param learningRate Taza de aprendizaje
      * @param error_threshold
      */
+    @Override
     public void entrenarRed(byte[][] entradas, double[][] salidas, double learningRate, double error_threshold) {
 
         //paso 1: proveer los datos de entrada a las neuronas de entrada
@@ -291,7 +298,7 @@ public class RedNeuronal implements Serializable {
 
             }
             if (epoca % 5 == 0) {
-                errores.add(new Point2d(epoca, error));
+                errores.add(new Point.Double(epoca, error));
             }
             System.out.println("\tError =" + error + " Error threshold =" + error_threshold);
             epoca++;
@@ -322,7 +329,6 @@ public class RedNeuronal implements Serializable {
             }
         }
 
-        Capa[] h;
         Capa c;
         //las capas de ocultas
         for (int k = 0; k < capasOcultas.length; k++) {
@@ -348,5 +354,24 @@ public class RedNeuronal implements Serializable {
         }
 
         return sb.toString();
+    }
+
+    @Override
+    public int getSizeofCapaEntrada() {
+        return getCapaEntrada().getNeuronas().length;
+    }
+
+    @Override
+    public int getSizeofCapaSalida() {
+        return getCapaSalida().getNeuronas().length;
+    }
+
+    @Override
+    public int[] getSizeofCapasOcultas() {
+        int[] numeroCapasOcultas = new int[capasOcultas.length];
+        for (int i = 0; i < numeroCapasOcultas.length; i++) {
+            numeroCapasOcultas[i] = capasOcultas[i].getNeuronas().length;
+        }
+        return numeroCapasOcultas;
     }
 }

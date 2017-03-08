@@ -102,7 +102,7 @@ public class DownSampler {
 
             // now downsample
 //            SampleData data = sample.getData();
-            data = new Muestra(' ', DOWNSAMPLE_WIDTH, DOWNSAMPLE_HEIGHT);
+            data = new Muestra( DOWNSAMPLE_WIDTH, DOWNSAMPLE_HEIGHT);
 
             ratioX = (double) (downSampleRight
                     - downSampleLeft) / (double) data.getWidth();

@@ -5,7 +5,6 @@
  */
 package edu.uaz.jmmc.util;
 
-import edu.uaz.jmmc.mlp.RedNeuronal;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
@@ -15,7 +14,10 @@ import java.awt.RenderingHints;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
+
+import edu.uaz.jmmc.mlp.MLP;
 
 /**
  *
@@ -23,7 +25,7 @@ import javax.imageio.ImageIO;
  */
 public class RNPainter {
 
-    private RedNeuronal red;
+    private MLP red;
     private int num_capas;
     private ArrayList<PNeurona[]> capas;
     private int panel_width;
@@ -38,7 +40,7 @@ public class RNPainter {
 
     }
 
-    public Image paintRN(RedNeuronal red, int pwidth, int pheight) {
+    public Image paintRN(MLP red, int pwidth, int pheight) {
         this.red = red;
         panel_width = pwidth;
         panel_height = pheight;
@@ -64,7 +66,8 @@ public class RNPainter {
 
     private void initPainter() {
         num_capas = 2; //la capa de entrada y la de salida
-        num_capas += red.getCapasOcultas().length; //mas el numero de capas ocultas
+//        num_capas += red.getCapasOcultas().length; //mas el numero de capas ocultas
+        num_capas += red.getSizeofCapasOcultas().length; //mas el numero de capas ocultas
 
         w_space = panel_width / (num_capas + 1);
 
@@ -76,7 +79,9 @@ public class RNPainter {
         for (int i = 0; i < num_capas; i++) {
             if (i == 0) {
                 //first one
-                nn = red.getCapaEntrada().getNeuronas().length;
+//                nn = red.getCapaEntrada().getNeuronas().length;
+                nn = red.getSizeofCapaEntrada();
+                
                 vspace = panel_height / (nn + 1);
                 PNeurona c[] = new PNeurona[nn];
 
@@ -88,7 +93,9 @@ public class RNPainter {
             }
             if (i == num_capas - 1) {
                 //last one
-                nn = red.getCapaSalida().getNeuronas().length;
+//                nn = red.getCapaSalida().getNeuronas().length;
+                nn = red.getSizeofCapaSalida();
+                
                 vspace = panel_height / (nn + 1);
                 PNeurona c[] = new PNeurona[nn];
 
@@ -100,7 +107,9 @@ public class RNPainter {
             }
 
             //in a hidden layer
-            nn = red.getCapasOcultas()[cap_ocult_count].getNeuronas().length;
+//            nn = red.getCapasOcultas()[cap_ocult_count].getNeuronas().length;
+            nn = red.getSizeofCapasOcultas()[cap_ocult_count];
+            
             vspace = panel_height / (nn + 1);
             PNeurona c[] = new PNeurona[nn];
 
@@ -142,10 +151,6 @@ public class RNPainter {
         }
         //set the old stroke back
 //        g.setStroke(old_stroke);
-    }
-
-    private void paintWeights() {
-
     }
 
     private void paintInOutArrows(Graphics2D g) {

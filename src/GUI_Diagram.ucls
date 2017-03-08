@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.9" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <class id="1" language="java" name="edu.uaz.jmmc.gui.GUI_MLP" project="Tesis_JMMC" 
+    file="/Tesis_JMMC/src/edu/uaz/jmmc/gui/GUI_MLP.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="119" width="125" x="155" y="3"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="edu.uaz.jmmc.gui.SwingTable" project="Tesis_JMMC" 
+    file="/Tesis_JMMC/src/edu/uaz/jmmc/gui/SwingTable.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="155" width="184" x="174" y="2769"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="edu.uaz.jmmc.gui.CrearRedVentaController" project="Tesis_JMMC" 
+    file="/Tesis_JMMC/src/edu/uaz/jmmc/gui/CrearRedVentaController.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="263" width="229" x="320" y="3"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="edu.uaz.jmmc.gui.VentanaMainController" project="Tesis_JMMC" 
+    file="/Tesis_JMMC/src/edu/uaz/jmmc/gui/VentanaMainController.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="2423" width="375" x="174" y="306"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="edu.uaz.jmmc.gui.servicios.DescodificarImagenesService" project="Tesis_JMMC" 
+    file="/Tesis_JMMC/src/edu/uaz/jmmc/gui/servicios/DescodificarImagenesService.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="227" width="226" x="561" y="28"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="edu.uaz.jmmc.gui.servicios.EntrenarService" project="Tesis_JMMC" 
+    file="/Tesis_JMMC/src/edu/uaz/jmmc/gui/servicios/EntrenarService.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="245" width="338" x="827" y="28"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="edu.uaz.jmmc.gui.servicios.EntrenarImagenesService" project="Tesis_JMMC" 
+    file="/Tesis_JMMC/src/edu/uaz/jmmc/gui/servicios/EntrenarImagenesService.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="281" width="332" x="1205" y="28"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <association id="8">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="9" name="service"/>      
+      <multiplicity id="10" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="11">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="12" name="vmc"/>      
+      <multiplicity id="13" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="14">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="15" name="tablaEntrenamiento"/>      
+      <multiplicity id="16" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="17">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="18" name="tablaPruebas"/>      
+      <multiplicity id="19" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

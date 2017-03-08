@@ -1,10 +1,3 @@
-package test_filtros;
-
-import edu.uaz.jmmc.filtros_imagen.Segmentador;
-import java.awt.Image;
-import java.io.IOException;
-import java.net.URL;
-import javax.imageio.ImageIO;
 
 //<editor-fold defaultstate="collapsed" desc="licence">
 /*
@@ -24,25 +17,38 @@ import javax.imageio.ImageIO;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 //</editor-fold>
+
+
+package edu.uaz.jmmc.gui;
+
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author juanmartinez
  */
-public class TestSegmentador {
+public class SwingTable extends JPanel {
 
-    public static void main(String[] args) {
-        try {
-            new TestSegmentador().run();
-        } catch (IOException ex) {
-            System.out.println("error " + ex);
-        }
+	private static final long serialVersionUID = 1;
+	public JTable tabla;
+
+    public SwingTable(String[][] datos, String[] cloumnas) {
+        DefaultTableModel dtm = new DefaultTableModel(datos, cloumnas);
+        tabla = new JTable(dtm);
+        JScrollPane scrollPane = new JScrollPane(tabla);
+
+        this.add(scrollPane);
     }
 
-    public void run() throws IOException {
-        URL resource = getClass().getResource("/imagen.png");
-        System.out.println(resource);
-
-        Image img = ImageIO.read(resource);
-        Segmentador.split(new Image[]{img}, 6, 4, "1 2 3 4", "/Users/juanmartinez/temp/");
+    public JTable getTabla() {
+        return tabla;
     }
+
+    public void setTabla(JTable tabla) {
+        this.tabla = tabla;
+    }
+
 }

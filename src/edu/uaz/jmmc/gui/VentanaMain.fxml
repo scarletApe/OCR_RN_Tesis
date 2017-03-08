@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.canvas.*?>
 <?import javafx.embed.swing.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.chart.*?>
@@ -11,7 +12,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="601.0" prefWidth="861.0" stylesheets="@Metro-UI.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.uaz.jmmc.gui.VentanaMainController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@Metro-UI.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.uaz.jmmc.gui.VentanaMainController">
    <children>
       <MenuBar>
         <menus>
@@ -236,15 +237,21 @@
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <Label layoutX="14.0" layoutY="29.0" text="Label" />
-                              <ImageView fitHeight="307.0" fitWidth="373.0" layoutX="14.0" layoutY="57.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../imagenes/vacio.png" />
-                                 </image>
-                              </ImageView>
-                              <Label layoutX="402.0" layoutY="69.0" text="Label" />
-                              <Button layoutX="316.0" layoutY="351.0" mnemonicParsing="false" text="Button" />
-                              <Button layoutX="222.0" layoutY="351.0" mnemonicParsing="false" text="Button" />
+                              <Label layoutX="14.0" layoutY="29.0" text="Dibuje un Caracter Aquí:" />
+                              <Label layoutX="358.0" layoutY="29.0" text="Filtrado:" />
+                              <HBox alignment="CENTER" layoutX="14.0" layoutY="292.0" spacing="10.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0">
+                                 <children>
+                                    <Button layoutX="14.0" layoutY="292.0" mnemonicParsing="false" onAction="#handleLimpiarDibujo" styleClass="btn" text="Limpiar" />
+                                    <Button layoutX="89.0" layoutY="292.0" mnemonicParsing="false" onAction="#handleReconocer" styleClass="btn" text="Reconocer" />
+                                    <Label text="Resultado:" />
+                                    <TextField fx:id="tfReconocido" layoutX="164.0" layoutY="292.0" />
+                                 </children>
+                              </HBox>
+                              <HBox fx:id="boxDibujar" layoutX="14.0" layoutY="57.0" prefHeight="365.0" prefWidth="601.0" spacing="10.0" style="-fx-background-color: #dcedf5;" AnchorPane.bottomAnchor="57.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="57.0">
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </HBox>
                            </children>
                         </AnchorPane>
                     </content>

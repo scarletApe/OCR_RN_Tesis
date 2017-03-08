@@ -6,6 +6,7 @@
 package edu.uaz.jmmc.mlp;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -14,7 +15,8 @@ import java.util.Random;
  */
 public class Capa implements Serializable{
 
-    private Neurona[] neuronas;
+    private static final long serialVersionUID = 1L;
+    private final Neurona[] neuronas;
     private Capa capaAnterior;
     private Capa capaSiguiente;
 
@@ -51,7 +53,7 @@ public class Capa implements Serializable{
 
     @Override
     public String toString() {
-        return "Capa{" + "neuronas=" + neuronas + ", capaAnterior=" + capaAnterior + ", capaSiguiente=" + capaSiguiente + '}';
+        return "Capa{" + "neuronas=" + Arrays.toString(neuronas) + ", capaAnterior=" + capaAnterior + ", capaSiguiente=" + capaSiguiente + '}';
     }
 
     public void conectarNeuronas() {
